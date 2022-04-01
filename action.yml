@@ -1,4 +1,7 @@
 name: "Enforce License Compliance"
+inputs:
+  fossa_api_key:
+    required: false
 runs:
   using: "composite"
   steps:
@@ -6,19 +9,22 @@ runs:
       name: 'Pick a FOSSA API key'
       id: set_key
       shell: bash
+      env:
+        PREFERRED: ${{ inputs.fossa_api_key }}
       run: |
 
         # FOSSA has two kinds of API keys (aka tokens), a full-privilege key
         # and a low-privilege "push-only" key. The practical difference is that
-        # using a full key provides more feedback on scan failure. We have a
-        # full key stored in org-wide GitHub Secrets, but this isn't available
-        # when making a PR from a fork, so if it's missing we fall back to a
-        # push-only key attached to a low-privilege account, which is safe
-        # (enough) to expose publicly here in this file.
+        # the full key provides more feedback on `fossa test` failure. We have
+        # a full key stored in org-wide GitHub Secrets, but a) we can't access
+        # it in an action, only in a workflow (hence the input here) and b) it
+        # isn't available even in a workflow when run in a PR from a fork. If
+        # for any reason it's missing we fall back to a push-only key attached
+        # to a low-privilege account, which is safe (enough) to expose publicly
+        # here in this file and gives us at least basic pass/fail.
         #
         # See also: https://docs.fossa.com/docs/api-reference#api-tokens
 
-        PREFERRED="${{ github.secrets.FOSSA_API_KEY }}"
         FALLBACK="9fc50c40b136c68873ad05aec573cf3e"
         echo "::set-output name=key::${PREFERRED:-$FALLBACK}"
 
@@ -38,3 +44,14 @@ runs:
       with:
         api-key: ${{ steps.set_key.outputs.key }}
         run-tests: true
+
+    - if: github.repository_owner == 'getsentry' && ${{ failure() }}
+      name: 'Handle errors'
+      shell: bash
+      run: |
+        echo
+        echo "🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 "
+        echo
+        echo "Eep! It seems that this PR introduces a license violation. Did you add any libraries? Do they use the GPL or some weird license? Am I a confused bot? If you need a hand, cc: @getsentry/open-source in a comment. 🙏"
+        echo
+        echo "🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 "
