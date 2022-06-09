@@ -28,32 +28,30 @@ runs:
         FALLBACK="9fc50c40b136c68873ad05aec573cf3e"
         echo "::set-output name=key::${PREFERRED:-$FALLBACK}"
 
-# Disabled while we wait for FOSSA to fix bugs.
-#
-#    - if: github.repository_owner == 'getsentry'
-#      name: 'Checkout Code'
-#      uses: actions/checkout@v2
-#
-#    - if: github.repository_owner == 'getsentry'
-#      name: 'Run FOSSA Scan'
-#      uses: fossas/fossa-action@5913e730490ebf75ae47b59687b7e590289eed92
-#      with:
-#        api-key: ${{ steps.set_key.outputs.key }}
-#
-#    - if: github.repository_owner == 'getsentry'
-#      name: 'Run FOSSA Test'
-#      uses: fossas/fossa-action@5913e730490ebf75ae47b59687b7e590289eed92
-#      with:
-#        api-key: ${{ steps.set_key.outputs.key }}
-#        run-tests: true
-#
-#    - if: github.repository_owner == 'getsentry' && failure()
-#      name: 'Handle errors'
-#      shell: bash
-#      run: |
-#        echo
-#        echo "🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 "
-#        echo
-#        echo "Eep! It seems that this PR introduces a license violation. Did you add any libraries? Do they use the GPL or some weird license? Am I a confused bot? If you need a hand, cc: @getsentry/open-source in a comment. 🙏"
-#        echo
-#        echo "🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 "
+    - if: github.repository_owner == 'getsentry'
+      name: 'Checkout Code'
+      uses: actions/checkout@v2
+
+    - if: github.repository_owner == 'getsentry'
+      name: 'Run FOSSA Scan'
+      uses: fossas/fossa-action@5913e730490ebf75ae47b59687b7e590289eed92
+      with:
+        api-key: ${{ steps.set_key.outputs.key }}
+
+    - if: github.repository_owner == 'getsentry'
+      name: 'Run FOSSA Test'
+      uses: fossas/fossa-action@5913e730490ebf75ae47b59687b7e590289eed92
+      with:
+        api-key: ${{ steps.set_key.outputs.key }}
+        run-tests: true
+
+    - if: github.repository_owner == 'getsentry' && failure()
+      name: 'Handle errors'
+      shell: bash
+      run: |
+        echo
+        echo "🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 "
+        echo
+        echo "Eep! It seems that this PR introduces a license violation. Did you add any libraries? Do they use the GPL or some weird license? Am I a confused bot? If you need a hand, cc: @getsentry/open-source in a comment. 🙏"
+        echo
+        echo "🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 "
