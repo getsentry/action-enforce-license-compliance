@@ -30,7 +30,7 @@ runs:
         FALLBACK="9fc50c40b136c68873ad05aec573cf3e"
         echo "key=${PREFERRED:-$FALLBACK}" >> "$GITHUB_OUTPUT"
         # Install specific version of fossa-cli to guarantee stability of parsing fossa job outputs
-        VERSION="v3.8.20"
+        VERSION="v3.9.14"
         curl -H 'Cache-Control: no-cache' "https://raw.githubusercontent.com/fossas/fossa-cli/$VERSION/install-latest.sh" | bash -s -- "$VERSION"
 
     - name: 'Checkout Code'
