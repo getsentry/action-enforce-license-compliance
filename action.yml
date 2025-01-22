@@ -80,7 +80,7 @@ runs:
           echo
           echo "🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 "
           echo
-          echo "Eep! It seems that this PR introduces a license violation. Did you add any libraries? Do they use the GPL or some weird license? Am I a confused bot? If you need a hand, cc: @getsentry/open-source in a comment. 🙏"
+          echo "Eep! It seems that this PR introduces a license violation. Did you add any libraries? Do they use the GPL or some weird license? Am I a confused bot? If you need a hand, cc: @getsentry/dev-infra in a comment. 🙏"
           echo
           echo "🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 "
           exit 1
