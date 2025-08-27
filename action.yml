@@ -2,6 +2,10 @@ name: "Enforce License Compliance"
 inputs:
   fossa_api_key:
     required: false
+  skip_checkout:
+    description: 'Skip running actions/checkout'
+    required: false
+    default: 'false'
 runs:
   using: "composite"
   steps:
@@ -34,6 +38,7 @@ runs:
         curl -H 'Cache-Control: no-cache' "https://raw.githubusercontent.com/fossas/fossa-cli/$VERSION/install-latest.sh" | bash -s -- "$VERSION"
 
     - name: 'Checkout Code'
+      if: inputs.skip_checkout != 'true'
       uses: actions/checkout@v3
 
     - name: 'Run `fossa analyze`'
