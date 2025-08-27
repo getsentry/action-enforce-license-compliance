@@ -2,6 +2,10 @@ name: "Enforce License Compliance"
 inputs:
   fossa_api_key:
     required: false
+  fossa_test_timeout_seconds:
+    description: 'Timeout for `fossa test` in seconds' 
+    required: false
+    default: '300' # default of 60 minutes is way too long to block CI
   skip_checkout:
     description: 'Skip running actions/checkout'
     required: false
@@ -61,12 +65,12 @@ runs:
       continue-on-error: true
       env:
         FOSSA_API_KEY: ${{ steps.set_key.outputs.key }}
+        FOSSA_TEST_TIMEOUT_SECONDS: ${{ inputs.fossa_test_timeout_seconds }}
         GITHUB_PR_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       shell: bash
       run: |
         exec &> >(tee -a "test_logs.txt")
-        # Set timeout to 5 minutes (default of 60 minutes is waaaay too long to block CI)
-        fossa test --timeout 300 --revision "$GITHUB_PR_SHA"
+        fossa test --timeout "$FOSSA_TEST_TIMEOUT_SECONDS" --revision "$GITHUB_PR_SHA"
 
     - if: steps.analyze.outcome == 'failure' || steps.test.outcome == 'failure'
       name: 'Send error to Sentry on `fossa-cli` errors'
