@@ -92,6 +92,8 @@ runs:
           echo "Eep! It seems that this PR introduces a license violation. Did you add any libraries? Do they use the GPL or some weird license? Am I a confused bot? If you need a hand, cc: @getsentry/dev-infra in a comment. 🙏"
           echo
           echo "🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 🛑 "
+          echo "Open-Source Legal Policy: https://www.notion.so/sentry/Open-Source-Legal-Policy-ac4885d265cb4d7898a01c060b061e42#ac4885d265cb4d7898a01c060b061e42"
+          echo "If the license violation is good to ignore, check this document on steps to clear the issue: https://www.notion.so/sentry/How-to-Clear-License-Compliance-Issues-in-FOSSA-0484468727ba46f5be2e4656bae54507"
           exit 1
         fi
         curl -sL https://sentry.io/get-cli/ | sh
