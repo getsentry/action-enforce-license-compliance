@@ -77,6 +77,9 @@ runs:
       shell: bash
       env:
         SENTRY_DSN: https://decbca863c554db095624ede8a83310c@o1.ingest.sentry.io/4505031352713216
+        # Avoid sentry-cli inferring the caller's GITHUB_SHA, which associates
+        # FOSSA failures with releases belonging to the caller's Sentry project.
+        SENTRY_RELEASE: fossa-ci
       run: |
         if [[ ${{ steps.analyze.outcome }} == 'failure' ]]; then
           curl -sL https://sentry.io/get-cli/ | sh
