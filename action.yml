@@ -39,7 +39,10 @@ runs:
         echo "key=${PREFERRED:-$FALLBACK}" >> "$GITHUB_OUTPUT"
         # Install specific version of fossa-cli to guarantee stability of parsing fossa job outputs
         VERSION="v3.8.20"
-        curl -H 'Cache-Control: no-cache' "https://raw.githubusercontent.com/fossas/fossa-cli/$VERSION/install-latest.sh" | bash -s -- "$VERSION"
+        INSTALL_SCRIPT=$(mktemp)
+        curl -fsSL -H 'Cache-Control: no-cache' "https://raw.githubusercontent.com/fossas/fossa-cli/$VERSION/install-latest.sh" -o "$INSTALL_SCRIPT"
+        bash "$INSTALL_SCRIPT" "$VERSION"
+        rm -f "$INSTALL_SCRIPT"
 
     - name: 'Checkout Code'
       if: inputs.skip_checkout != 'true'
@@ -82,7 +85,10 @@ runs:
         SENTRY_RELEASE: fossa-ci
       run: |
         if [[ ${{ steps.analyze.outcome }} == 'failure' ]]; then
-          curl -sL https://sentry.io/get-cli/ | sh
+          SENTRY_INSTALL=$(mktemp)
+          curl -fsSL https://sentry.io/get-cli/ -o "$SENTRY_INSTALL"
+          bash "$SENTRY_INSTALL"
+          rm -f "$SENTRY_INSTALL"
           # Environment variables will automatically be sent, so we just want some minimal information
           error_msg=$(cat analyze_logs.txt | grep -zoP '(?<=>>> Relevant errors\n\n    Error\n\n      ).*?(?=\n)' || echo 'unknown error message')
           sentry-cli send-event -m "analyze: $error_msg" -t repo:$GITHUB_REPOSITORY -e url:$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID --logfile analyze_logs.txt
@@ -99,6 +105,9 @@ runs:
           echo "If the license violation is good to ignore, check this document on steps to clear the issue: https://www.notion.so/sentry/How-to-Clear-License-Compliance-Issues-in-FOSSA-0484468727ba46f5be2e4656bae54507"
           exit 1
         fi
-        curl -sL https://sentry.io/get-cli/ | sh
+        SENTRY_INSTALL=$(mktemp)
+        curl -fsSL https://sentry.io/get-cli/ -o "$SENTRY_INSTALL"
+        bash "$SENTRY_INSTALL"
+        rm -f "$SENTRY_INSTALL"
         error_msg=$(cat test_logs.txt | grep -zoP '(?<=>>> Relevant errors\n\n    Error\n\n      ).*?(?=\n)' || echo 'unknown error message')
         sentry-cli send-event -m "test: $error_msg" -t repo:$GITHUB_REPOSITORY -e url:$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID --logfile test_logs.txt
